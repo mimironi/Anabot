@@ -30,9 +30,9 @@ function isAuth(value: unknown): value is Auth {
 
 function toRawConfig(input: typeof rawConfig): RawConfig {
     return {
-        MC_HOST: input.MC_HOST,
-        MC_PORT: input.MC_PORT,
-        MC_VERSION: input.MC_VERSION,
+        MC_HOST: input.MC_HOST || "localhost",
+        MC_PORT: input.MC_PORT || 25565,
+        MC_VERSION: input.MC_VERSION || "1.21.4",
         MC_BOTS: input.MC_BOTS.map((bot): RawBotConfig => {
             if (!isAuth(bot.auth)) {
                 throw new Error(`Invalid auth value: ${bot.auth}`);
