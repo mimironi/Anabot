@@ -1,13 +1,13 @@
 {
-    "MC_HOST": "man.serveminecraft.net",
-    "MC_PORT": 25565,
-    "MC_VERSION": "1.21.4",
-    "MC_BOTS": [
+    "host": "man.serveminecraft.net",
+    "port": 25565,
+    "version": "1.21.4",
+    "bots": [
         {
             "auth":"",
             "username":"",
             "mc_password":"",
-            "server_password":""
+            "offline_password":""
         }
     ]
 }

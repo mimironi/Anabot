@@ -16,10 +16,10 @@ type RawBotConfig = {
 };
 
 type RawConfig = {
-    MC_HOST: string;
-    MC_PORT: number;
-    MC_VERSION: string;
-    MC_BOTS: RawBotConfig[];
+    host: string;
+    port: number;
+    version: string;
+    bots: RawBotConfig[];
 };
 
 const AUTH_VALUES = new Set<Auth>(["offline", "microsoft", "mojang"]);
@@ -30,10 +30,10 @@ function isAuth(value: unknown): value is Auth {
 
 function toRawConfig(input: typeof rawConfig): RawConfig {
     return {
-        MC_HOST: input.MC_HOST || "localhost",
-        MC_PORT: input.MC_PORT || 25565,
-        MC_VERSION: input.MC_VERSION || "1.21.4",
-        MC_BOTS: input.MC_BOTS.map((bot): RawBotConfig => {
+        host: input.host || "localhost",
+        port: input.port || 25565,
+        version: input.version || "1.21.4",
+        bots: input.bots.map((bot): RawBotConfig => {
             if (!isAuth(bot.auth)) {
                 throw new Error(`Invalid auth value: ${bot.auth}`);
             }
@@ -48,14 +48,14 @@ function toRawConfig(input: typeof rawConfig): RawConfig {
     };
 }
 
-const config = toRawConfig(rawConfig);
-
 export function loadConfig(): BotConfig[] {
-    return config.MC_BOTS.map((bot) => {
+    const config = toRawConfig(rawConfig);
+
+    return config.bots.map((bot) => {
         const botOptions: BotOptions = {
-            host: config.MC_HOST,
-            port: config.MC_PORT,
-            version: config.MC_VERSION,
+            host: config.host,
+            port: config.port,
+            version: config.version,
             auth: bot.auth,
             username: bot.username,
             password: bot.mc_password,
