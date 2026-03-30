@@ -3,7 +3,7 @@ import rawConfig from "../config.json";
 
 type Auth = "offline" | "microsoft" | "mojang";
 
-type BotConfig = {
+type Config = {
     botOptions: BotOptions;
     server_password: string;
 };
@@ -18,7 +18,6 @@ type RawBotConfig = {
 type RawConfig = {
     host: string;
     port: number;
-    version: string;
     bots: RawBotConfig[];
 };
 
@@ -29,13 +28,33 @@ function isAuth(value: unknown): value is Auth {
 }
 
 function toRawConfig(input: typeof rawConfig): RawConfig {
+
+    if (!input.host) {
+        throw new Error("Missing host in config.json");
+    }
+
+    if (!input.bots) {
+        throw new Error("Missing bots in config.json");
+    }
+
     return {
-        host: input.host || "localhost",
-        port: input.port || 25565,
-        version: input.version || "1.21.4",
+        host: input.host,
+        port: input.port,
         bots: input.bots.map((bot): RawBotConfig => {
             if (!isAuth(bot.auth)) {
                 throw new Error(`Invalid auth value: ${bot.auth}`);
+            }
+
+            if (!bot.username) {
+                throw new Error("Missing username in bot config");
+            }
+
+            if (bot.auth !== "offline" && !bot.mc_password) {
+                throw new Error("Missing mc_password in bot config");
+            }
+
+            if (!bot.server_password) {
+                throw new Error("Missing server_password in bot config");
             }
 
             return {
@@ -48,17 +67,16 @@ function toRawConfig(input: typeof rawConfig): RawConfig {
     };
 }
 
-export function loadConfig(): BotConfig[] {
+export function loadConfig(): Config[] {
     const config = toRawConfig(rawConfig);
 
     return config.bots.map((bot) => {
         const botOptions: BotOptions = {
             host: config.host,
             port: config.port,
-            version: config.version,
             auth: bot.auth,
             username: bot.username,
-            password: bot.mc_password,
+            password: bot.mc_password
         };
 
         return {

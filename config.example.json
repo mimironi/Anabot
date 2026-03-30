@@ -1,13 +1,12 @@
 {
     "host": "man.serveminecraft.net",
     "port": 25565,
-    "version": "1.21.4",
     "bots": [
         {
-            "auth":"",
-            "username":"",
-            "mc_password":"",
-            "offline_password":""
+            "auth": "",
+            "username": "",
+            "mc_password": "",
+            "server_password": ""
         }
     ]
 }
